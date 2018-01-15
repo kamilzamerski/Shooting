@@ -109,6 +109,10 @@ class BaseResultModel extends Model
         $this->results = $jsonResults;
     }
 
+    /**
+     * @param int $intId
+     * @return bool
+     */
     public static function isValidCompetition(int $intId)
     {
         return isset(static::$arrAvailableCompetitions[$intId]);

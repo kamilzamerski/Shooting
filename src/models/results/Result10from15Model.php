@@ -13,6 +13,12 @@ use App\Validators\Results10from15Validator;
 class Result10from15Model extends BaseResultModel implements ResultInterface
 {
 
+    /**
+     * @param array $arrData
+     * @return BaseResultModel
+     * @throws NotFoundException
+     * @throws RequiredValueException
+     */
     public static function prepareResult(array $arrData): BaseResultModel
     {
         if (empty($arrData['shooter'])) {
@@ -42,6 +48,12 @@ class Result10from15Model extends BaseResultModel implements ResultInterface
         return $objResult;
     }
 
+    /**
+     * @param BaseResultModel $objResult
+     * @param array $arrData
+     * @return BaseResultModel
+     * @throws NotFoundException
+     */
     public static function prepareUpdateResult(BaseResultModel $objResult, array $arrData): BaseResultModel
     {
         if (!empty($arrData['shooter'])) {
@@ -65,14 +77,18 @@ class Result10from15Model extends BaseResultModel implements ResultInterface
         if(!empty($arrData['results'])) {
             $objResult->setResults($arrData['results']);
             $jsonPoints = json_decode($arrData['results'])->points;
-            $objResult->setPointSum($objResult->getSumPoints((array)$jsonPoints));
+            $objResult->setPointSum($objResult->getPointsSum((array)$jsonPoints));
         }
 
         $objResult->save();
         return $objResult;
     }
 
-    private function getSumPoints(array $arrPoints): int
+    /**
+     * @param array $arrPoints
+     * @return int
+     */
+    private function getPointsSum(array $arrPoints): int
     {
         arsort($arrPoints);
         $sumPoints = 0;
