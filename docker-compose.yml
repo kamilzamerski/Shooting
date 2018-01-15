@@ -1,0 +1,41 @@
+version: '3.1'
+
+volumes:
+    logs:
+        driver: local
+
+services:
+    slim:
+        build:
+          context: ./docker
+          dockerfile: Dockerfile
+        image: slim
+        working_dir: /var/www
+        command: php -S 0.0.0.0:8080 -t public index.php
+        environment:
+            docker: "true"
+        ports:
+            - 8080:8080
+        volumes:
+            - .:/var/www
+            - logs:/var/www/logs
+    db:
+      container_name: db
+      image: mysql
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: test
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        environment:
+         - PMA_ARBITRARY=1
+         - TESTSUITE_PASSWORD=test
+        restart: always
+        depends_on:
+         - db
+        ports:
+         - 81:80
+        volumes:
+         - /sessions
